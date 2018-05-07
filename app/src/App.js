@@ -11,7 +11,7 @@ class App extends Component {
   render() {
    
     return (
-      <Sample symbol={"SZ002456"}/>
+      <Sample symbol={"SZ002092"}/>
     );
   }
 }

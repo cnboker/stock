@@ -25,7 +25,7 @@ namespace XueqiuApi.Data
 
         public IMongoCollection<Screener> Screeners{
             get{
-                return _database.GetCollection<Screener>("screener");
+                return _database.GetCollection<Screener>("screeners");
             }
         }
     }

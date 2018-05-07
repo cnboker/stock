@@ -77,11 +77,11 @@ export default class Sample extends Component {
           bottom: 0
         }}>
           <Line type="monotone" dataKey="current" stroke="Red" label="价格"/>
-          <Line type="monotone" dataKey="pct" stroke="Purple" label="前5日涨跌幅"/>
-          <Line type="monotone" dataKey="pcT5" stroke="Maroon" label="前5日涨跌幅"/>
+          <Line type="monotone" dataKey="pct" stroke="Orange" label="前5日涨跌幅"/>
+          <Line type="monotone" dataKey="pcT5" stroke="Grey" label="前5日涨跌幅"/>
           <Line type="monotone" dataKey="pcT10" stroke="Brown"/>
           <Line type="monotone" dataKey="pcT20" stroke="Olive"/>
-          <Line type="monotone" dataKey="pcT1m" stroke="Mint"/>
+          <Line type="monotone" dataKey="pcT1m" stroke="Teal"/>
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
           <XAxis dataKey="date"/>
           <YAxis/>

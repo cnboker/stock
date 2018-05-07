@@ -47,23 +47,30 @@ namespace XueqiuApi.Model
     public decimal Current { get; set; }
     [BsonElement("pct")]
     public decimal PCT { get; set; }
+    
     [BsonElement("pb")]
     public decimal PB { get; set; }
     [BsonElement("pettm")]
     public decimal Pettm { get; set; }
-    [BsonElement("pcts")]
+
+    [BsonElement("pct5")]
     public decimal PCT5 { get; set; }
+
     [BsonElement("pct10")]
     public decimal PCT10 { get; set; }
+
     [BsonElement("pct20")]
     public decimal PCT20 { get; set; }
-    [BsonElement("pct1m")]
 
+    [BsonElement("pct1m")]
     public decimal PCT1m { get; set; }
+
     [BsonElement("chgpct")]
     public decimal Chgpct { get; set; }
+
     [BsonElement("chgpct5")]
     public decimal Chgpct5 { get; set; }
+
     [BsonElement("chgpct10")]
     public decimal Chgpct10 { get; set; }
     [BsonElement("chgpct20")]
