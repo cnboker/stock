@@ -26,7 +26,8 @@ namespace XueqiuApi.Data{
 
     public async Task<IEnumerable<Screener>> GetScreeners(string symbol)
     {
-      return await _context.Screeners.Find(x=>x.Symbol == symbol).ToListAsync();
+      
+      return await _context.Screeners.Find(x=>(x.Symbol == "SZ" + symbol)||(x.Symbol=="SH" + symbol)).ToListAsync();
     }
   }
 }
