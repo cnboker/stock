@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Form, FormGroup, ControlLabel, FormControl, Button, InputGroup} from 'react-bootstrap'
+import React, { Component } from 'react';
+import { Form, FormGroup, ControlLabel, FormControl, Button, InputGroup } from 'react-bootstrap'
 import logo from './logo.svg';
 import './App.css';
 import Chart from './charts/stockScreener'
@@ -16,23 +16,22 @@ class App extends Component {
       .bind(this);
 
     this.state = {
-      value: '',
       symbols: []
     };
+    this.value = '';
   }
-  componentDidMount() {}
+  componentDidMount() { }
 
   handleSubmit(event) {
     event.preventDefault();
     var array = this
-      .state
       .value
       .split(' ');
-    this.setState({symbols: array})
+    this.setState({ symbols: [...array] })
   }
 
   handleChange(e) {
-    this.setState({value: e.target.value});
+    this.value = e.target.value.trim() ;
   }
 
   getValidationState() {
@@ -40,7 +39,7 @@ class App extends Component {
   }
 
   render() {
-
+    const { symbols } = this.state
     return (
       <div>
         <Form onSubmit={this.handleSubmit}>
@@ -49,24 +48,22 @@ class App extends Component {
             bsClass="form-group"
             validationState={this.getValidationState()}>
             <InputGroup>
-            <FormControl
-              bsClass="form-control"
-              type="text"
-              value={this.state.value}
-              placeholder="enter symbol"
-              onChange={this.handleChange}/>
-            <InputGroup.Addon>
-              <Button type="submit" bsClass="form-button" >查询</Button>
-            </InputGroup.Addon>
+              <FormControl
+                bsClass="form-control"
+                type="text"
+                placeholder="enter symbol"
+                onChange={this.handleChange} />
+              <InputGroup.Addon>
+                <Button type="submit" bsClass="form-button" >查询</Button>
+              </InputGroup.Addon>
             </InputGroup>
           </FormGroup>
         </Form>
 
-        {this
-          .state
-          .symbols
+        {
+          symbols
           .map(symbol => {
-            return <Sample symbol={symbol}/>
+            return <Sample symbol={symbol.trim()} key={symbol.trim()} />
           })}
       </div>
     );

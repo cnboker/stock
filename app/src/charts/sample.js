@@ -15,6 +15,8 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import moment from 'moment'
 
+const apiServer = `${process.env.APIServer}/api/screener/`
+console.log('apiserver',apiServer)
 export default class Sample extends Component {
   constructor() {
 
@@ -26,7 +28,7 @@ export default class Sample extends Component {
 
   componentDidMount() {
     const {symbol} = this.props;
-    const url = `http://localhost:5000/api/screener/${symbol}`
+    const url =  `${process.env.REACT_APP_API_URL}/api/screener/${symbol}`;
    
     axios
       .get(url)
@@ -74,15 +76,15 @@ export default class Sample extends Component {
     ]
     if(this.state.data.length == 0)return null;
     return (
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={300}>
         <AreaChart
           cx="50%"
           cy="50%"
           outerRadius="80%"
           data={this.state.data}
           margin={{
-          top: 10,
-          right: 30,
+          top: 5,
+          right: 5,
           left: 0,
           bottom: 0
         }}>
