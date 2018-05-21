@@ -11,12 +11,12 @@ import {
   Legend,
   Label
 } from 'recharts'
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 
 const apiServer = `${process.env.APIServer}/api/screener/`
-console.log('apiserver',apiServer)
+console.log('apiserver', apiServer)
 export default class Sample extends Component {
   constructor() {
 
@@ -27,9 +27,9 @@ export default class Sample extends Component {
   }
 
   componentDidMount() {
-    const {symbol} = this.props;
-    const url =  `${process.env.REACT_APP_API_URL}/api/screener/${symbol}`;
-   
+    const { symbol } = this.props;
+    const url = `${process.env.REACT_APP_API_URL}/api/screener/${symbol}`;
+
     axios
       .get(url)
       .then(x => {
@@ -37,8 +37,9 @@ export default class Sample extends Component {
         x
           .data
           .forEach(function (d) {
-           
-            d.date = moment(d.date).format('YY-MM-DD')
+
+            d.date = moment(d.date).format('YYYY-MM-DD')
+            d.dd = moment(d.date).format('MM-DD')
             if (data.filter(i => d.date.indexOf(i.date) >= 0).length == 0) {
               // d.pct = (100+d.pct) * d.current / 100
               // d.pcT5 = (100+d.pcT5) * d.current / 100
@@ -47,8 +48,11 @@ export default class Sample extends Component {
               // d.pcT1m = (100+d.pcT1m) * d.current / 100
               data.push(d);
             }
-          })
-        this.setState({data: data})
+          });
+        data.sort(function (left, right) {
+          return moment.utc(left.date).diff(moment.utc(right.date))
+        });
+        this.setState({ data: data })
       })
       .catch(err => {
         console.log(err)
@@ -74,7 +78,7 @@ export default class Sample extends Component {
       'Mint',
       'Purple'
     ]
-    if(this.state.data.length == 0)return null;
+    if (this.state.data.length == 0) return null;
     return (
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
@@ -83,26 +87,26 @@ export default class Sample extends Component {
           outerRadius="80%"
           data={this.state.data}
           margin={{
-          top: 5,
-          right: 5,
-          left: 0,
-          bottom: 0
-        }}>
+            top: 5,
+            right: 5,
+            left: 0,
+            bottom: 0
+          }}>
           <Line type="monotone" dataKey="current" stroke="Red" />
-          <Area type="monotone" dataKey="pct" stroke="Orange" fill="Orange" fillOpacity={0.3}/>
-          <Area type="monotone" dataKey="pcT5" stroke="Grey" fill="Grey" fillOpacity={0.3}/>
-          <Area type="monotone" dataKey="pcT10" stroke="Brown"  fill="Brown" fillOpacity={0.3}/>
-          <Area type="monotone" dataKey="pcT20" stroke="Olive" fill="Olive" fillOpacity={0.3}/>
-          <Area type="monotone" dataKey="pcT1m" stroke="Teal" file="Teal" fillOpacity={0.3}/>
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-          <XAxis dataKey="date">
-          <Label value={this.state.data.length > 0 ? this.state.data[0].name:''} offset={0} position="top" />
+          <Area type="monotone" dataKey="pct" stroke="Orange" fill="Orange" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="pcT5" stroke="Grey" fill="Grey" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="pcT10" stroke="Brown" fill="Brown" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="pcT20" stroke="Olive" fill="Olive" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="pcT1m" stroke="Teal" file="Teal" fillOpacity={0.3} />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="dd">
+            <Label value={this.state.data.length > 0 ? this.state.data[0].name : ''} offset={0} position="top" />
           </XAxis>
-          <YAxis/>
-          <Tooltip/>
+          <YAxis />
+          <Tooltip />
           <Legend />
         </AreaChart>
-     
+
       </ResponsiveContainer>
     )
   }
