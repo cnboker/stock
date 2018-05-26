@@ -93,11 +93,11 @@ export default class Sample extends Component {
             bottom: 0
           }}>
           <Line type="monotone" dataKey="current" stroke="Red" />
-          <Area type="monotone" dataKey="pct" stroke="Orange" fill="Orange" fillOpacity={0.3} />
-          <Area type="monotone" dataKey="pcT5" stroke="Grey" fill="Grey" fillOpacity={0.3} />
-          <Area type="monotone" dataKey="pcT10" stroke="Brown" fill="Brown" fillOpacity={0.3} />
-          <Area type="monotone" dataKey="pcT20" stroke="Olive" fill="Olive" fillOpacity={0.3} />
-          <Area type="monotone" dataKey="pcT1m" stroke="Teal" file="Teal" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="pct" stroke="Red" fill="Red" fillOpacity={1} />
+          <Area type="monotone" dataKey="pcT5" stroke="Blue" fill="Blue" fillOpacity={1} />
+          <Area type="monotone" dataKey="pcT10" stroke="Yellow" fill="Yellow" fillOpacity={1} />
+          <Area type="monotone" dataKey="pcT20" stroke="Green" fill="Green" fillOpacity={1} />
+          <Area type="monotone" dataKey="pcT1m" stroke="Purple" file="Purple" fillOpacity={1} />
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
           <XAxis dataKey="dd">
             <Label value={this.state.data.length > 0 ? this.state.data[0].name : ''} offset={0} position="top" />
