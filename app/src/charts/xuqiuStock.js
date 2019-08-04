@@ -1,5 +1,4 @@
 import {
-  LineChart,
   Line,
   AreaChart,
   Area,
@@ -15,9 +14,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 
-const apiServer = `${process.env.APIServer}/api/screener/`
-console.log('apiserver', apiServer)
-export default class Sample extends Component {
+//const apiServer = `${process.env.APIServer}/api/screener/`
+export default class XuqiuStock extends Component {
   constructor() {
 
     super();
@@ -40,7 +38,7 @@ export default class Sample extends Component {
 
             d.date = moment(d.date).format('YYYY-MM-DD')
             d.dd = moment(d.date).format('MM-DD')
-            if (data.filter(i => d.date.indexOf(i.date) >= 0).length == 0) {
+            if (data.filter(i => d.date.indexOf(i.date) >= 0).length === 0) {
               // d.pct = (100+d.pct) * d.current / 100
               // d.pcT5 = (100+d.pcT5) * d.current / 100
               // d.pcT10 = (100+d.pcT10) * d.current / 100
@@ -59,26 +57,8 @@ export default class Sample extends Component {
       })
   }
   render() {
-    const colors = [
-      'Maroon',
-      'Brown',
-      'Olive',
-      'Teal',
-      'Red',
-      'Orange',
-      'Yellow',
-      'Pink',
-      'Lime',
-      'Green',
-      'Coral',
-      'Cyan',
-      'Grey',
-      'Black',
-      'Navy',
-      'Mint',
-      'Purple'
-    ]
-    if (this.state.data.length == 0) return null;
+   
+    if (this.state.data.length === 0) return null;
     return (
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
