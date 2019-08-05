@@ -38,7 +38,7 @@ function main() {
     //console.log(day3Data);
     var fs = require("fs");
     var moment = require('moment')
-    var outputFilename = `D:/projects/stock/app/src/data/${moment().format('YYYY-MM-DD')}.json`;
+    var outputFilename = `../server/jsonFiles/${moment().format('YYYY-MM-DD')}.json`;
     fs.writeFile(outputFilename, JSON.stringify(day3Data, null, 4), function(
       err
     ) {

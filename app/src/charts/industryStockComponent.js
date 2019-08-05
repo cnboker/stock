@@ -12,13 +12,13 @@ import {
 export default class IndustryStockComponent extends  React.Component {
  
   render() {
-      if(!this.props.data)return null;
     return (
       <div>
+      <h3>{this.props.title}</h3>
         <BarChart
-          width={3000}
-          height={400}
-          data={this.state.data}
+          width={2500}
+          height={150}
+          data={this.props.data}
           margin={{
             top: 5,
             right: 30,
@@ -38,8 +38,8 @@ export default class IndustryStockComponent extends  React.Component {
         </BarChart>
 
         <BarChart
-          width={3000}
-          height={400}
+          width={2500}
+          height={150}
           data={this.props.data}
           margin={{
             top: 5,

@@ -1,11 +1,13 @@
+import axios from 'axios'
+
 var moment = require("moment");
-const beforedayFile = `../data/${moment()
+const beforedayFile = `/json/${moment()
   .add("days", -2)
   .format("YYYY-MM-DD")}.json`;
-const yestodayFile = `../data/${moment()
+const yestodayFile = `/json/${moment()
   .add("days", -1)
   .format("YYYY-MM-DD")}.json`;
-const nowFile = `../data/${moment().format("YYYY-MM-DD")}.json`;
+const nowFile = `/json/${moment().format("YYYY-MM-DD")}.json`;
 
 /*[
         "1", //3day 排名         0
@@ -39,89 +41,83 @@ const nowFile = `../data/${moment().format("YYYY-MM-DD")}.json`;
         "-14.37"                  25
     ]*/
 
-module.exports.dataload = function() {
-   
-  var beforedayData = readJsonFile(beforedayFile);
-  var yestodayData = readJsonFile(yestodayFile);
-  var nowData = readJsonFile(nowFile);
-  return {
-    beforedayData,
-    yestodayData,
-    nowData
-  };
+var DataLoader =  function () {
+  return Promise.all([
+    axios.get(`${process.env.REACT_APP_URL}${beforedayFile}`),
+    axios.get(`${process.env.REACT_APP_URL}${yestodayFile}`),
+    axios.get(`${process.env.REACT_APP_URL}${nowFile}`)
+  ]).then(([data1, data2, data3]) => {
+    return {
+      beforedayData: parseData(data1.data),
+      yestodayData: parseData(data2.data),
+      nowData: parseData(data3.data)
+    }
+  }).catch(e => {
+    console.log(e)
+  })
 };
 
-const tryRequire = (path) => {
-    try {
-     return require(path);
-    } catch (err) {
-     return null;
-    }
-  };
+export default DataLoader;
 
-function readJsonFile(file) {
-//filename ../data/2019-08-04.json null
-  console.log("filename", file,tryRequire(file));
-  if (tryRequire(file) == null) return null;
-  var jsonData = require(file);
-  var data = Object.values(jsonData).map((x, index) => {
-    const [
-      rank3,
-      name,
-      companyCount,
-      index3,
-      pcr3,
-      assertIn3,
-      assertOut3,
-      assertBalance3,
-      rank5,
-      index5,
-      pcr5,
-      assertIn5,
-      assertOut5,
-      assertBalance5,
-      rank10,
-      index10,
-      pcr10,
-      assertIn10,
-      assertOut10,
-      assertBalance10,
-      rank20,
-      index20,
-      pcr20,
-      assertIn20,
-      assertOut20,
-      assertBalance20
-    ] = x;
-    return {
-      rank3: +rank3,
-      name,
-      companyCount: +companyCount,
-      index3: +index3,
-      pcr3: +pcr3.replace("%", ""),
-      assertIn3: +assertIn3,
-      assertOut3: +assertOut3,
-      assertBalance3: +assertBalance3 * 100,
-      rank5: +rank5,
-      index5,
-      pcr5: +(pcr5 || "").replace("%", ""),
-      assertIn5: +assertIn5,
-      assertOut5: +assertOut5,
-      assertBalance5: +assertBalance5 * 100,
-      rank10: +rank10,
-      index10,
-      pcr10: +(pcr10 || "").replace("%", ""),
-      assertIn10: +assertIn10,
-      assertOut10: +assertOut10,
-      assertBalance10: +assertBalance10 * 100,
-      rank20: +rank20,
-      index20,
-      pcr20: +(pcr20 || "").replace("%", ""),
-      assertIn20: +assertIn20,
-      assertOut20: +assertOut20,
-      assertBalance20: +assertBalance20 * 100
-    };
-  });
+function parseData(jsonData) {
+  var data = Object
+    .values(jsonData)
+    .map((x, index) => {
+      const [rank3,
+        name,
+        companyCount,
+        index3,
+        pcr3,
+        assertIn3,
+        assertOut3,
+        assertBalance3,
+        rank5,
+        index5,
+        pcr5,
+        assertIn5,
+        assertOut5,
+        assertBalance5,
+        rank10,
+        index10,
+        pcr10,
+        assertIn10,
+        assertOut10,
+        assertBalance10,
+        rank20,
+        index20,
+        pcr20,
+        assertIn20,
+        assertOut20,
+        assertBalance20] = x;
+      return {
+        rank3: + rank3,
+        name,
+        companyCount: + companyCount,
+        index3: + index3,
+        pcr3: + pcr3.replace("%", ""),
+        assertIn3: + assertIn3,
+        assertOut3: + assertOut3,
+        assertBalance3: + assertBalance3 * 100,
+        rank5: + rank5,
+        index5,
+        pcr5: + (pcr5 || "").replace("%", ""),
+        assertIn5: + assertIn5,
+        assertOut5: + assertOut5,
+        assertBalance5: + assertBalance5 * 100,
+        rank10: + rank10,
+        index10,
+        pcr10: + (pcr10 || "").replace("%", ""),
+        assertIn10: + assertIn10,
+        assertOut10: + assertOut10,
+        assertBalance10: + assertBalance10 * 100,
+        rank20: + rank20,
+        index20,
+        pcr20: + (pcr20 || "").replace("%", ""),
+        assertIn20: + assertIn20,
+        assertOut20: + assertOut20,
+        assertBalance20: + assertBalance20 * 100
+      };
+    });
 
   return data.filter(x => {
     return x.rank3 < x.rank5 && x.rank5 < x.rank10 && x.rank10 < x.rank20;
