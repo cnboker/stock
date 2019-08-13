@@ -17,7 +17,7 @@ export default class IndustryStockComponent extends  React.Component {
       <h3>{this.props.title}</h3>
         <BarChart
           width={2500}
-          height={150}
+          height={180}
           data={this.props.data}
           margin={{
             top: 5,
@@ -39,7 +39,7 @@ export default class IndustryStockComponent extends  React.Component {
 
         <BarChart
           width={2500}
-          height={150}
+          height={180}
           data={this.props.data}
           margin={{
             top: 5,

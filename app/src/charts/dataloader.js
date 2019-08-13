@@ -1,11 +1,22 @@
 import axios from 'axios'
 
 var moment = require("moment");
+var week = moment().day()
+var beforeDays = -2
+var yestodayDays = -1;
+console.log('week=', week)
+if(week == 1){
+  beforeDays = -4;
+  yestodayDays = -3;
+}else if(week == 2){
+  beforeDays = -3;
+  yestodayDays = -2;
+}
 const beforedayFile = `/json/${moment()
-  .add("days", -2)
+  .add("days", beforeDays)
   .format("YYYY-MM-DD")}.json`;
 const yestodayFile = `/json/${moment()
-  .add("days", -1)
+  .add("days", yestodayDays)
   .format("YYYY-MM-DD")}.json`;
 const nowFile = `/json/${moment().format("YYYY-MM-DD")}.json`;
 
@@ -40,17 +51,19 @@ const nowFile = `/json/${moment().format("YYYY-MM-DD")}.json`;
         "82.70",                  24
         "-14.37"                  25
     ]*/
-
-var DataLoader =  function () {
+/*
+optType:1.连涨, 2.前20排名
+*/
+var DataLoader =  function (optType) {
   return Promise.all([
     axios.get(`${process.env.REACT_APP_URL}${beforedayFile}`),
     axios.get(`${process.env.REACT_APP_URL}${yestodayFile}`),
     axios.get(`${process.env.REACT_APP_URL}${nowFile}`)
   ]).then(([data1, data2, data3]) => {
     return {
-      beforedayData: parseData(data1.data),
-      yestodayData: parseData(data2.data),
-      nowData: parseData(data3.data)
+      beforedayData: parseData(optType,data1.data),
+      yestodayData: parseData(optType,data2.data),
+      nowData: parseData(optType,data3.data)
     }
   }).catch(e => {
     console.log(e)
@@ -59,7 +72,7 @@ var DataLoader =  function () {
 
 export default DataLoader;
 
-function parseData(jsonData) {
+function parseData(optType,jsonData) {
   var data = Object
     .values(jsonData)
     .map((x, index) => {
@@ -97,29 +110,42 @@ function parseData(jsonData) {
         pcr3: + pcr3.replace("%", ""),
         assertIn3: + assertIn3,
         assertOut3: + assertOut3,
-        assertBalance3: + assertBalance3 * 100,
+        assertBalance3: + assertBalance3 ,
         rank5: + rank5,
         index5,
         pcr5: + (pcr5 || "").replace("%", ""),
         assertIn5: + assertIn5,
         assertOut5: + assertOut5,
-        assertBalance5: + assertBalance5 * 100,
+        assertBalance5: + assertBalance5 ,
         rank10: + rank10,
         index10,
         pcr10: + (pcr10 || "").replace("%", ""),
         assertIn10: + assertIn10,
         assertOut10: + assertOut10,
-        assertBalance10: + assertBalance10 * 100,
+        assertBalance10: + assertBalance10 ,
         rank20: + rank20,
         index20,
         pcr20: + (pcr20 || "").replace("%", ""),
         assertIn20: + assertIn20,
         assertOut20: + assertOut20,
-        assertBalance20: + assertBalance20 * 100
+        assertBalance20: + assertBalance20 
       };
     });
-
-  return data.filter(x => {
-    return x.rank3 < x.rank5 && x.rank5 < x.rank10 && x.rank10 < x.rank20;
-  });
+    if(optType === 1){
+      return data.filter(x => {
+        return x.rank3 < x.rank5 && x.rank5 < x.rank10 && x.rank10 < x.rank20;
+      });
+    }else if(optType === 2){
+      return data.filter(x=>{
+        return x.rank3<20
+      })
+    }else{
+      var sortby = require('./sort_by')
+      var data =  data.filter(x=>{
+        return x.assertBalance3 > 0 && x.rank3 < 50
+      }).sort(sortby('assertBalance3',true));
+      console.log(data)
+      return data;
+    }
+  
 }

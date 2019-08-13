@@ -31,10 +31,14 @@ function main() {
     day5Data = await dataFetch(select5day, page);
     day10Data = await dataFetch(select10day, page);
     day20Data = await dataFetch(select20day, page);
-
-    dataMerge(day3Data, day5Data);
-    dataMerge(day3Data, day10Data);
-    dataMerge(day3Data, day20Data);
+    try{
+      dataMerge(day3Data, day5Data);
+      dataMerge(day3Data, day10Data);
+      dataMerge(day3Data, day20Data);
+    }catch(e){
+      console.info(e)
+    }
+    
     //console.log(day3Data);
     var fs = require("fs");
     var moment = require('moment')
@@ -68,7 +72,7 @@ async function dataFetch(selector, page) {
 
     jd = { ...jd, ...data };
 
-    await sleep(1000);
+    await sleep(2000);
     await page.evaluate(
       selector => document.querySelector(selector).click(),
       nextpage
