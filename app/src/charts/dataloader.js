@@ -9,8 +9,7 @@ if(week == 1){
   beforeDays = -4;
   yestodayDays = -3;
 }else if(week == 2){
-  beforeDays = -3;
-  yestodayDays = -2;
+  beforeDays = -4;
 }
 const beforedayFile = `/json/${moment()
   .add("days", beforeDays)
