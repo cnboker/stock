@@ -1,5 +1,7 @@
 //同花顺行业数据
 var sleep = require("../sleep");
+const selectnowday =
+  "#datacenter_change_content > div.table-tab.J-ajax-board > a:nth-child(1)";
 const select3day =
   "#datacenter_change_content > div.table-tab.J-ajax-board > a:nth-child(2)";
 const select5day =
@@ -13,10 +15,31 @@ const selectTable = "#J-ajax-main > table tr";
 ///html/body/div[3]/div[3]/div[2]/div[3]/div[2]/a[text()="下一页"]
 const nextpage = "a.changePage:nth-last-child(3)";
 const SCAN_MAX_PAGE = 5;
-var day3Data = {},
+var nowData = {},
+  day3Data = {},
   day5Data = {},
   day10Data = {},
   day20Data = {};
+
+function nowDataParse(data) {
+  var keys = Object.keys(data);
+  _nowdata = {};
+  for (var key of keys) {
+    var _item = [];
+    var item = data[key];
+    _item.push(item[0]);
+    _item.push(item[1]);
+    _item.push(item[7]);
+    _item.push(item[2]);
+    _item.push(item[3]);
+    _item.push(item[4]);
+    _item.push(item[5]);
+    _item.push(item[6]);
+    _nowdata[item[1]] = _item;
+  }
+  
+  return _nowdata;
+}
 
 function main() {
   const puppeteer = require("puppeteer");
@@ -26,24 +49,30 @@ function main() {
     const page = await browser.newPage();
     await page.goto("http://data.10jqka.com.cn/funds/gnzjl/###");
     //await page.screenshot({ path: "example.png" });
+    nowData = await dataFetch(selectnowday, page);
 
+    nowData = nowDataParse(nowData);
+  
     day3Data = await dataFetch(select3day, page);
     day5Data = await dataFetch(select5day, page);
     day10Data = await dataFetch(select10day, page);
     day20Data = await dataFetch(select20day, page);
-    try{
-      dataMerge(day3Data, day5Data);
-      dataMerge(day3Data, day10Data);
-      dataMerge(day3Data, day20Data);
-    }catch(e){
-      console.info(e)
+    try {
+      dataMerge(nowData, day3Data);
+      dataMerge(nowData, day5Data);
+      dataMerge(nowData, day10Data);
+      dataMerge(nowData, day20Data);
+    } catch (e) {
+      console.info(e);
     }
-    
+
     //console.log(day3Data);
     var fs = require("fs");
-    var moment = require('moment')
-    var outputFilename = `../server/jsonFiles/${moment().format('YYYY-MM-DD')}.json`;
-    fs.writeFile(outputFilename, JSON.stringify(day3Data, null, 4), function(
+    var moment = require("moment");
+    var outputFilename = `../server/jsonFiles/${moment().format(
+      "YYYY-MM-DD"
+    )}.json`;
+    fs.writeFile(outputFilename, JSON.stringify(nowData, null, 4), function(
       err
     ) {
       if (err) {
@@ -72,12 +101,12 @@ async function dataFetch(selector, page) {
 
     jd = { ...jd, ...data };
 
-    await sleep(2000);
+    await sleep(3000);
     await page.evaluate(
       selector => document.querySelector(selector).click(),
       nextpage
     );
-    await sleep(2000);
+    await sleep(3000);
     pageIndex++;
   }
   return jd;

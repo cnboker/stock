@@ -31,6 +31,7 @@ export default class IndustryStockComponent extends  React.Component {
           <YAxis />
           <Tooltip />
           <Legend />
+          <Bar dataKey="rank" fill="Orange" />
           <Bar dataKey="rank3" fill="Green" />
           <Bar dataKey="rank5" fill="Blue" />
           <Bar dataKey="rank10" fill="Black" />
@@ -53,6 +54,7 @@ export default class IndustryStockComponent extends  React.Component {
           <YAxis />
           <Tooltip />
           <Legend />
+          <Bar dataKey="assertBalance" fill="Orange" />
           <Bar dataKey="assertBalance3" fill="Green" />
           <Bar dataKey="assertBalance5" fill="Blue" />
           <Bar dataKey="assertBalance10" fill="Black" />
