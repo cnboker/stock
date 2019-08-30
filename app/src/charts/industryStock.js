@@ -1,13 +1,15 @@
 import React from "react";
 import IndustryStockComponent from "./industryStockComponent";
-import DataLoader from './dataloader'
-
+import {dataLoader,dataByTag} from './dataloader'
+import TagStock from './tagStock'
 export default class IndustryStock extends React.Component {
   constructor() {
     super();
     var loader = require("./dataloader");
     this.state = {
-      data: {}
+      data: {
+      },
+      tags:[]
     }
 
   }
@@ -15,7 +17,7 @@ export default class IndustryStock extends React.Component {
   componentDidMount() {
     var $this = this;
 
-    DataLoader(1).then(data => {
+    dataLoader(1).then(data => {
       console.log('data', data)
       $this.setState({data})
     })
@@ -24,11 +26,18 @@ export default class IndustryStock extends React.Component {
   rankChange(type){
     var $this = this;
 
-    DataLoader(type).then(data => {
+    dataLoader(type).then(data => {
       console.log('data', data)
-      $this.setState({data})
+      $this.setState({data,tags:data.tags})
     })
   }
+
+  tagClick(tag){
+    console.log('tag=',tag)
+    var data = dataByTag(tag);
+    this.setState({data})
+  }
+
   render() {
     return (
       <div>
@@ -44,6 +53,9 @@ export default class IndustryStock extends React.Component {
             资金前50
             </button>
           </div>
+        </div>
+        <div>
+          <TagStock tags= {this.state.tags} tagClick={this.tagClick.bind(this)}/>
         </div>
         <IndustryStockComponent data={this.state.data.nowData} title={"今天"}/>
         <IndustryStockComponent data={this.state.data.yestodayData} title={"昨天"}/>

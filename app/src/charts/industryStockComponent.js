@@ -48,17 +48,18 @@ export default class IndustryStockComponent extends  React.Component {
             left: 20,
             bottom: 5
           }}
+          
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="assertBalance" fill="Orange" />
-          <Bar dataKey="assertBalance3" fill="Green" />
-          <Bar dataKey="assertBalance5" fill="Blue" />
-          <Bar dataKey="assertBalance10" fill="Black" />
-          <Bar dataKey="assertBalance20" fill="Red" />
+          <Bar dataKey="assertBalance" fill="Orange" maxBarSize="5"/>
+          <Bar dataKey="assertBalance3" fill="Green" barSize="20"/>
+          <Bar dataKey="assertBalance5" fill="Blue" barSize="20"/>
+          <Bar dataKey="assertBalance10" fill="Black" barSize="20"/>
+          <Bar dataKey="assertBalance20" fill="Red" barSize="20"/>
         </BarChart>
       </div>
     );
