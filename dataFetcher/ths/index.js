@@ -88,7 +88,7 @@ async function dataFetch(selector, page) {
     selector => document.querySelector(selector).click(),
     selector
   );
-  await sleep(1000);
+  await sleep(2000);
   var pageIndex = 0;
   var jd = {};
   //3d
@@ -101,7 +101,7 @@ async function dataFetch(selector, page) {
 
     jd = { ...jd, ...data };
 
-    await sleep(3000);
+    await sleep(5000);
     await page.evaluate(
       selector => document.querySelector(selector).click(),
       nextpage
