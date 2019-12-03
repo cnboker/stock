@@ -37,7 +37,7 @@ function nowDataParse(data) {
     _item.push(item[6]);
     _nowdata[item[1]] = _item;
   }
-  
+
   return _nowdata;
 }
 
@@ -49,19 +49,22 @@ function main() {
     const page = await browser.newPage();
     await page.goto("http://data.10jqka.com.cn/funds/gnzjl/###");
     //await page.screenshot({ path: "example.png" });
-    nowData = await dataFetch(selectnowday, page);
 
-    nowData = nowDataParse(nowData);
-  
-    day3Data = await dataFetch(select3day, page);
-    day5Data = await dataFetch(select5day, page);
-    day10Data = await dataFetch(select10day, page);
-    day20Data = await dataFetch(select20day, page);
+    //day20Data = await dataFetch(select20day, page);
     try {
+      nowData = await dataFetch(selectnowday, page);
+
+      nowData = nowDataParse(nowData);
+
+      day3Data = await dataFetch(select3day, page);
       dataMerge(nowData, day3Data);
+
+      day5Data = await dataFetch(select5day, page);
       dataMerge(nowData, day5Data);
+
+      day10Data = await dataFetch(select10day, page);            
       dataMerge(nowData, day10Data);
-      dataMerge(nowData, day20Data);
+      // dataMerge(nowData, day20Data);
     } catch (e) {
       console.info(e);
     }
@@ -88,7 +91,7 @@ async function dataFetch(selector, page) {
     selector => document.querySelector(selector).click(),
     selector
   );
-  await sleep(2000);
+  await sleep(5000);
   var pageIndex = 0;
   var jd = {};
   //3d
@@ -101,12 +104,12 @@ async function dataFetch(selector, page) {
 
     jd = { ...jd, ...data };
 
-    await sleep(5000);
+    //await sleep(5000);
     await page.evaluate(
       selector => document.querySelector(selector).click(),
       nextpage
     );
-    await sleep(3000);
+    await sleep(9000);
     pageIndex++;
   }
   return jd;

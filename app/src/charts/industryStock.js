@@ -69,6 +69,12 @@ export default class IndustryStock extends React.Component {
               资金前50
             </button>
             <button
+              className="btn btn-secondary"
+              onClick={this.rankChange.bind(this, 4)}
+            >
+              涨跌幅排名
+            </button>
+            <button
               data-toggle="collapse"
               onClick={this.toggle}
             >

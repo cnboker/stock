@@ -56,41 +56,43 @@ optType:1.连涨, 2.前20排名
 var resultData;
 export function dataLoader(optType) {
   if (resultData) {
-    var [data1, data2, data3] = resultData;
+    var { data1, data2, data3 } = resultData;
     var data = {
-      beforedayData: parseData(optType, data1.data),
-      yestodayData: parseData(optType, data2.data),
-      nowData: parseData(optType, data3.data),
-      tags: Object.values(data3.data).map(x => x[1])
+      beforedayData: parseData(optType, data1),
+      yestodayData: parseData(optType, data2),
+      nowData: parseData(optType, data3),
+      tags: Object.values(data3).map(x => x[1])
     };
     return Promise.resolve(data);
   }
-  return Promise.all([
-    axios.get(`${process.env.REACT_APP_URL}${beforedayFile}`),
-    axios.get(`${process.env.REACT_APP_URL}${yestodayFile}`),
-    axios.get(`${process.env.REACT_APP_URL}${nowFile}`)
-  ])
-    .then(result => {
-      resultData = result;
-      var [data1, data2, data3] = result;
-      return {
-        beforedayData: parseData(optType, data1.data),
-        yestodayData: parseData(optType, data2.data),
-        nowData: parseData(optType, data3.data),
-        tags: Object.values(data3.data).map(x => x[1])
-      };
-    })
-    .catch(e => {
-      console.log(e);
-    });
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_URL}/api/THSIndustry`)
+      .then(res => {
+        resultData = res.data;
+        console.log("data", res.data);
+        var { data1, data2, data3 } = res.data;
+        resolve({
+          beforedayData: parseData(optType, data1),
+          yestodayData: parseData(optType, data2),
+          nowData: parseData(optType, data3),
+          tags: Object.values(data3).map(x => x[1])
+        });
+      })
+      .catch(e => {
+        reject(e);
+        console.log(e);
+      });
+  });
 }
 
 export function dataByTag(tag) {
-  var [data1, data2, data3] = resultData;
+  var { data1, data2, data3 } = resultData;
   var data = {
-    beforedayData: parseData(-1, data1.data).filter(x => x.name === tag),
-    yestodayData: parseData(-1, data2.data).filter(x => x.name === tag),
-    nowData: parseData(-1, data3.data).filter(x => x.name === tag)
+    beforedayData: parseData(-1, data1).filter(x => x.name === tag),
+    yestodayData: parseData(-1, data2).filter(x => x.name === tag),
+    nowData: parseData(-1, data3).filter(x => x.name === tag)
   };
   return data;
 }
@@ -129,7 +131,8 @@ function parseData(optType, jsonData) {
       pcr20,
       assertIn20,
       assertOut20,
-      assertBalance20
+      assertBalance20,
+      assertTotal
     ] = x;
     return {
       rank: +rank,
@@ -142,7 +145,7 @@ function parseData(optType, jsonData) {
       assertBalance: +assertBalance,
       rank3: +rank3,
       index3: +index3,
-      pcr3: +pcr3.replace("%", ""),
+      pcr3: +(pcr3 || "").replace("%", ""),
       assertIn3: +assertIn3,
       assertOut3: +assertOut3,
       assertBalance3: +assertBalance3,
@@ -163,7 +166,8 @@ function parseData(optType, jsonData) {
       pcr20: +(pcr20 || "").replace("%", ""),
       assertIn20: +assertIn20,
       assertOut20: +assertOut20,
-      assertBalance20: +assertBalance20
+      assertBalance20: +assertBalance20,
+      assertTotal: +assertBalance + assertBalance5 + assertBalance10
     };
   });
   if (optType === 1) {
@@ -183,12 +187,21 @@ function parseData(optType, jsonData) {
     var sortby = require("./sort_by");
     var data = data
       .filter(x => {
-        return x.assertBalance > 0 && x.assertBalance3 > 0 ;
+        return x.assertBalance > 0 && x.assertBalance3 > 0 && x.rank < 50;
       })
       .sort(sortby("assertBalance", true));
-   
+
     console.log(data);
     return data;
+  } 
+  else if(optType === 4){
+    return data.filter(x => {
+      return (
+        x.pcr5 > 0
+      );
+    })
+    //.sort(sortby("pcr5", true));
+   
   }
   else {
     return data;
